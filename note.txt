@@ -1,0 +1,24 @@
+Debug tìm hiểu lỗ hổng phiên bản cũ 
+Em debug api/liferay trước. Có payload đã viết sẵn ở máy ảo ubuntu. Với ip khác không phải máy local. Truyền tham số /api////liferay để bypass filter.
+
+Ở đây post tới uri /api////fileray thì thấy uri không bị lọc vẫn giữ nguyên.
+Ở đây thấy key là /api////... so với file xml định nghĩa thì không tồn tại nên có thể loại bỏ filter này
+Trong này có thể thấy được có 15 cái filter. 
+Vì không có filter custom của mình để lọc ip local nên dễ dàng bypass qua và đi vào hàm xử lý
+Đến đoạn này do hàm readObject mình truyền inject vào nên sẽ thực thi lỗi do common collection
+Video bị giới hạn nên e cắt video trước.
+
+Tiếp theo là nếu để api/liferay
+Ở đây uri sẽ là /api/liferay 
+Nó sẽ tạo ra một cái filter với key /api/liferay do có khai báo trong file xml
+Số lượng tăng thêm 1 filter thêm mới kia.
+Ở đây lọc 2 ip 127.0. và Server_ip
+Máy có 1 địa chỉ ip nên ở đây sẽ return về không cho pass do máy ở trong cùng mạng chứ không phải local. Vì vậy nên /api/liferay không thể qua được.
+
+Tương tự thế là /api/spring.
+Trường hợp spring khác 1 chút.
+phần đầu bypass thì giống nhưng lỗi xảy ra khác 1 chút.
+Phần này là bypass /api/spring
+
+Sau khi qua filter thì nó sẽ phân về các service khác nhau để xử lý
+Ở đoạn này có xảy ra lỗi ở hàm readObject tương tự như ở phần trước. 
